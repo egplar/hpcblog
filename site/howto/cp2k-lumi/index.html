@@ -1,0 +1,807 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../..">
+      
+      
+        <link rel="next" href="../../benchmarks/cp2k-lumi/">
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.9">
+    
+    
+      
+        <title>Compiling CP2K 2023.1 with AMD GPU support - Peter Larsson's HPC Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.0d440cfe.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.2505c338.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans:300,300i,400,400i,700,700i%7CIBM+Plex+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans";--md-code-font:"IBM Plex Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#how-to-compile-cp2k-20231-with-amd-gpu-support" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Peter Larsson&#39;s HPC Notes" class="md-header__button md-logo" aria-label="Peter Larsson's HPC Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9v2m0 8h1v-2H9v2m0 8h1v-2H9v2M5 3v2h2V3H5m0 8v2h2v-2H5m0 8v2h2v-2H5Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Peter Larsson's HPC Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Compiling CP2K 2023.1 with AMD GPU support
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../.." class="md-tabs__link">
+      Home
+    </a>
+  </li>
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="./" class="md-tabs__link md-tabs__link--active">
+        How-to guides
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../benchmarks/cp2k-lumi/" class="md-tabs__link">
+        Benchmarks
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../reference/mi250x/" class="md-tabs__link">
+        Reference
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Peter Larsson&#39;s HPC Notes" class="md-nav__button md-logo" aria-label="Peter Larsson's HPC Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1M9 5h1V3H9v2m0 8h1v-2H9v2m0 8h1v-2H9v2M5 3v2h2V3H5m0 8v2h2v-2H5m0 8v2h2v-2H5Z"/></svg>
+
+    </a>
+    Peter Larsson's HPC Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          How-to guides
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          How-to guides
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Compiling CP2K 2023.1 with AMD GPU support
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Compiling CP2K 2023.1 with AMD GPU support
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    Prerequisites
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compile-environment" class="md-nav__link">
+    Compile environment
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-cosma-with-gpu-aware-mpi-support" class="md-nav__link">
+    Step 1: COSMA with GPU-aware MPI support
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-cp2k-release-version-20231" class="md-nav__link">
+    Step 2: CP2K release version 2023.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-test-running-on-the-gpu-nodes" class="md-nav__link">
+    Step 3: Test running on the GPU nodes
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          Benchmarks
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Benchmarks
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../benchmarks/cp2k-lumi/" class="md-nav__link">
+        CP2K on LUMI
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          Reference
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Reference
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/mi250x/" class="md-nav__link">
+        MI250x
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/rocm/" class="md-nav__link">
+        ROCm
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    Prerequisites
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compile-environment" class="md-nav__link">
+    Compile environment
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-cosma-with-gpu-aware-mpi-support" class="md-nav__link">
+    Step 1: COSMA with GPU-aware MPI support
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-cp2k-release-version-20231" class="md-nav__link">
+    Step 2: CP2K release version 2023.1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-test-running-on-the-gpu-nodes" class="md-nav__link">
+    Step 3: Test running on the GPU nodes
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="how-to-compile-cp2k-20231-with-amd-gpu-support">How to compile CP2K 2023.1 with AMD GPU support</h1>
+<p>The <a href="https://www.cp2k.org/">CP2K</a> software package is one the first to get AMD GPU support in many parts of package. Please see the <a href="https://www.cp2k.org/gpu">GPU</a> page in the documentation for an overview of which parts are accelerated. RPA calculations and linear scaling DFT were part of the delivery acceptance benchmark as part of the procurement of the LUMI and Dardel clusters.</p>
+<p>This guide is specifically for LUMI, but it should also apply to similar supercomputers like Frontier, Adastra, Setonix, and Dardel. It is based on the procedure described to me by Alfio Lazzaro at the HPE Center of Excellence for LUMI.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>You need to have at least ROCm version 5.3, version 5.2 can compile the code, but it will not work properly (at least the DBCSR library) when you run it due to bugs in ROCm. You can check the version of ROCm available provided by the Cray programming environment with</p>
+<pre><code>$ module avail rocm
+
+-------------------- /users/peterlarsson/modules --------------------
+rocm/5.3.3
+
+------------------------ HPE-Cray PE modules ------------------------
+rocm/5.0.2 (D)
+
+---------------------- Non-PE HPE-Cray modules ----------------------
+rocm/5.0.2
+</code></pre>
+<p><strong>Currently (Jan 2023), only ROCm 5.0 is available in LUMI, which means that you have to rely on an unsupported version of ROCm installed by the LUMI support team</strong>. You can see this extra ROCm module by activating the <code>CrayEnv</code> module:</p>
+<pre><code>module load CrayEnv rocm/5.3.3
+</code></pre>
+<p>I have used it successfully to run CP2K on the LUMI-G partition.</p>
+<h2 id="compile-environment">Compile environment</h2>
+<p>Let us use Cray's GCC and FFTW libraries to compile CP2K. Starting from the default login environment (i.e. no <code>LUMI</code> or <code>spack</code> modules loaded):</p>
+<pre><code>module load CrayEnv
+module load PrgEnv-gnu/8.3.3
+module load cray-fftw/3.3.10.1
+module load craype-accel-amd-gfx90a
+module load rocm/5.3.3
+</code></pre>
+<p>In some cases, you might need to load a module with a more recent version of <code>cmake</code>, but in this case, it still works with the system default cmake (3.17.0).</p>
+<h2 id="step-1-cosma-with-gpu-aware-mpi-support">Step 1: COSMA with GPU-aware MPI support</h2>
+<p>It is necessary to compile the COSMA library separately, in order to active GPU-aware MPI support in the library, as this is currently not done automatically in the toolchain install scripts for CP2K. This speeds up RPA calculations.</p>
+<pre><code>git clone --recursive https://github.com/eth-cscs/COSMA COSMA-2.6.2
+cd COSMA-2.6.2
+mkdir build
+cd build
+mkdir install
+cmake -DCMAKE_INSTALL_PREFIX=${PWD}/install -DCOSMA_BLAS=ROCM -DCOSMA_SCALAPACK=CRAY_LIBSCI -DCOSMA_WITH_TESTS=NO -DCOSMA_WITH_BENCHMARKS=NO -DCMAKE_CXX_COMPILER=CC -DCOSMA_WITH_APPS=NO -DCOSMA_WITH_PROFILING=NO -DBUILD_SHARED_LIBS=NO -DCOSMA_WITH_GPU_AWARE_MPI=ON ..    
+make
+make install
+</code></pre>
+<p>The special configuration flag here is <code>-DCOSMA_WITH_GPU_AWARE_MPI=ON</code>. The build should be fast, even in serial mode, a few minutes maximum. If you check the <code>install/</code> directory, you should see the following:</p>
+<pre><code>$ ls install/lib64/
+cmake  libcosma.a  libcosma_prefixed_pxgemm.a  libcosma_pxgemm_cpp.a  libcosta.a  libcosta_prefixed_scalapack.a  libcosta_scalapack.a  libTiled-MM.a  pkgconfig
+</code></pre>
+<p>These COSMA libraries will later be used by the CP2K install script. Unfortunately, the install script expects to find the libraries in <code>/lib</code> and not <code>/lib64</code>. We can fix this by just making a symbolic link.</p>
+<pre><code>$ cd install
+$ ln -s lib64 lib
+</code></pre>
+<p>We are now ready to starting installing CP2K.</p>
+<h2 id="step-2-cp2k-release-version-20231">Step 2: CP2K release version 2023.1</h2>
+<p>Checkout the latest CP2K release. In January 2023, this was "2023.1", which contains AMD GPU support.</p>
+<pre><code>mkdir cp2k
+cd cp2k
+git clone --recursive https://github.com/cp2k/cp2k.git 2023.1
+cd 2023.1
+git checkout v2023.1
+</code></pre>
+<p>The first step is to build some libraries used by CP2K. This can be done with the provided <code>install_cp2k_toolchain</code> script:</p>
+<pre><code>cd tools/toolchain
+./install_cp2k_toolchain.sh -j 16 --enable-cray --enable-hip=yes --gpu-ver=Mi250 --with-cosma=/[path-to-cosma-above]/COSMA-2.6.2/build/install
+</code></pre>
+<p>The scripts provides several flags which are useful here: <code>enable-cray</code> to detect the Cray programming environment, <code>--enable-hip</code> for GPU support, but with AMD GPUs (HIP is like CUDA, but for AMD GPUs), and <code>--gpu-ver=Mi250</code> to select the GPU model corresponding to what is installed in LUMI, AMD MI250x. The output should begin like this:</p>
+<pre><code>WARNING: (./install_cp2k_toolchain.sh, line 330) No MPI installation detected (ignore this message in Cray Linux Environment or when MPI installation was requested).
+------------------------------------------------------------------------
+CRAY Linux Environment (CLE) is detected
+------------------------------------------------------------------------
+path to cc is /opt/cray/pe/craype/2.7.17/bin/cc
+path to ftn is /opt/cray/pe/craype/2.7.17/bin/ftn
+path to CC is /opt/cray/pe/craype/2.7.17/bin/CC
+Found include directory /opt/cray/pe/mpich/8.1.18/ofi/gnu/9.1/include
+Found include directory /opt/cray/pe/mpich/8.1.18/ofi/gnu/9.1/lib
+libz is found in ld search path
+libdl is found in ld search path
+Compiling with 16 processes for target native.
+</code></pre>
+<p>Building all the dependencies can take a considerable amount of time, for example, <code>libint</code> alone can take 1 hour, even using many cores. Compiling everyting with 16 cores (<code>-j 16</code> above) took ca 40 minutes. In the end of the terminal output, there will be some important information. You should see several lines like this indicating that ROCm has been found:</p>
+<pre><code>...
+libhipblas is found in ld search path
+Found lib directory /pfs/lustrep1/projappl/project_4650000xx/rocm/rocm-5.3.3/lib
+...
+</code></pre>
+<p>And an instruction to copy the "ARCH" files with compile settings to the base directory</p>
+<pre><code>Now copy:
+cp /projappl/project_4650000xx/build/cp2k/2023.1/tools/toolchain/install/arch/* to the cp2k/arch/ directory
+To use the installed tools and libraries and cp2k version
+compiled with it you will first need to execute at the prompt:
+source /projappl/project_4650000xx/build/cp2k/2023.1/tools/toolchain/install/setup
+To build CP2K you should change directory:
+cd cp2k/
+make -j 16 ARCH=local VERSION="ssmp sdbg psmp pdbg"
+</code></pre>
+<p>After having copied the files to the <code>arch/</code> directory, we can go back to the CP2K base directory and compile the program:</p>
+<pre><code>cd ../..
+make -j 16 ARCH=local_hip VERSION="psmp"
+</code></pre>
+<p>Please note that the ARCH file called <code>local-hip</code> should be used, not the one named just <code>local</code> as written in the terminal output above! Compiling CP2K itself should be faster. I recorded about 7 minutes. The binaries are found in then <code>exe/local_hip/</code> folder:</p>
+<pre><code>$ ls exe/local_hip/
+cp2k.popt                         dbt_tas_unittest.psmp             grid_miniapp.psmp                 nequip_unittest.psmp
+cp2k.psmp                         dbt_unittest.psmp                 grid_unittest.psmp                parallel_rng_types_unittest.psmp
+cp2k_shell.psmp                   dumpdcd.psmp                      libcp2k_unittest.psmp             xyz2dcd.psmp
+dbm_miniapp.psmp                  graph.psmp                        memory_utilities_unittest.psmp
+</code></pre>
+<p>A basic sanity check is to see if some HIP libraries were included in the binary at link time (they should be):</p>
+<pre><code>$ ldd exe/local_hip/cp2k.psmp | grep hip
+    libamdhip64.so.5 =&gt; /projappl/project_4625000xx/rocm/rocm-5.3.3/lib/libamdhip64.so.5 (0x00007fe4e6c2d000)
+    libhipfft.so =&gt; /projappl/project_4650000xx/rocm/rocm-5.3.3/lib/libhipfft.so (0x00007fe4e99c8000)
+    libhipblas.so.0 =&gt; /projappl/project_4650000xx/rocm/rocm-5.3.3/lib/libhipblas.so.0 (0x00007fe4e69cb000)
+</code></pre>
+<h2 id="step-3-test-running-on-the-gpu-nodes">Step 3: Test running on the GPU nodes</h2>
+<p>Here we will run the linear-scaling DFT benchmark provided with CP2K. It is a large simulation with 20,736 atoms. The linear scaling method uses the DBCSR matrix-matrix multiplication library, which uses GPUs. The benchmark located in the <code>benchmarks/QS_DM_LS/</code> folder. The recommended way to run is to use 8 MPI ranks per compute node (1 rank per GPU die), and 8 OpenMP threads per rank. As of January 2023, the so-called "low noise" mode is enabled on the compute nodes, which means that only 63 cores are available and the first core is reserved for the operating system. This requries some special CPU binding for best performance, and it also means that practically, it is easiest to run with 7 threads per rank (<code>OMP_NUM_THREADS=7</code>).</p>
+<p>The job script:</p>
+<pre><code>#!/bin/bash
+#SBATCH -J lsdft
+#SBATCH -p standard-g
+#SBATCH -A project_465000XXX
+#SBATCH --time=00:30:00
+#SBATCH --nodes=4
+#SBATCH --gres=gpu:8
+#SBATCH --exclusive
+#SBATCH --ntasks-per-node=8
+#SBATCH --cpus-per-task=7
+
+export OMP_PLACES=cores
+export OMP_PROC_BIND=close
+export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
+
+ulimit -s unlimited
+export OMP_STACKSIZE=512M
+
+export MPICH_OFI_NIC_POLICY=GPU
+export MPICH_GPU_SUPPORT_ENABLED=1
+
+module load rocm/5.3.3
+
+CP2K=/path/to/cp2k/2023.1/exe/local_hip/cp2k.psmp
+srun --cpu-bind=mask_cpu:0xfe,0xfe00,0xfe0000,0xfe000000,0xfe00000000,0xfe0000000000,0xfe000000000000,0xfe00000000000000 ./select_gpu.sh ${CP2K} -i H2O-dft-ls.inp -o out-4n8r7t8g.1
+</code></pre>
+<p>The <code>export MPICH_GPU_SUPPORT_ENABLED=1</code> is not strictly necessary, since it is the default value, but I keep it there for reference.</p>
+<p>The <code>select_gpu.sh</code> helper script is useful to get the GPU to CPU binding correct on LUMI.</p>
+<pre><code>$ cat select_gpu.sh 
+#!/bin/bash
+
+export ROCR_VISIBLE_DEVICES=$SLURM_LOCALID
+#export ROCR_VISIBLE_DEVICES=0,1
+
+if [[ "$SLURM_LOCALID" == "0" ]]; then
+ROCR_VISIBLE_DEVICES=4
+fi
+
+if [[ "$SLURM_LOCALID" == "1" ]]; then
+ROCR_VISIBLE_DEVICES=5
+fi
+
+if [[ "$SLURM_LOCALID" == "2" ]]; then
+ROCR_VISIBLE_DEVICES=2
+fi
+
+if [[ "$SLURM_LOCALID" == "3" ]]; then
+ROCR_VISIBLE_DEVICES=3
+fi
+
+if [[ "$SLURM_LOCALID" == "4" ]]; then
+ROCR_VISIBLE_DEVICES=6
+fi
+
+if [[ "$SLURM_LOCALID" == "5" ]]; then
+ROCR_VISIBLE_DEVICES=7
+fi
+
+if [[ "$SLURM_LOCALID" == "6" ]]; then
+ROCR_VISIBLE_DEVICES=0
+fi
+
+if [[ "$SLURM_LOCALID" == "7" ]]; then
+ROCR_VISIBLE_DEVICES=1
+fi
+
+echo "Node: " $SLURM_NODEID "Local task id:" $SLURM_LOCALID "ROCR_VISIBLE_DEVICES" $ROCR_VISIBLE_DEVICES
+exec $*
+</code></pre>
+<p>This script is useful for many applications using GPU on LUMI, not only CP2K.</p>
+<p>When I run this job, I get a runtime of 537 (+/-1) seconds on 4 LUMI-G nodes (with 32 GPUs in total). This can be compared with ca 723 (+/-1) seconds on 4 LUMI-C nodes (using all 128 cores and <code>OMP_NUM_THREADS=8</code>). The GPU speed-up is not dramatic for linear-scaling DFT, and may not be cost-effective, but it is a good start. It is possible to improve the speed a bit with 2 MB huge memory pages (436 s), but this can also slow down some other kinds of calculations, so it is not foolproof. I expect, though, that some other methods, like RPA calculations, will show much better performance on GPUs.</p>
+<p>I show some more benchmarks for CP2K on my <a href="/benchmarks/cp2k-lumi">CP2K benchmark page</a>.</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+          <a href="#" class="md-top md-icon" data-md-component="top" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Back to top
+          </a>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.top", "navigation.instant", "navigation.tabs"], "search": "../../assets/javascripts/workers/search.db81ec45.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.a00a7c5e.min.js"></script>
+      
+    
+  </body>
+</html>
