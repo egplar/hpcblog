@@ -30,4 +30,5 @@ nav:
   - Reference:
     - MI250x: reference/mi250x.md
     - ROCm: reference/rocm.md
+    - PCIe: reference/pcie.md
 
