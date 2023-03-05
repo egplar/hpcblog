@@ -2,11 +2,22 @@
 
 The [CP2K](https://www.cp2k.org/) program contains a set of standard benchmarks, which are distributed with code. You can find them in the `benchmarks/` directory in the source code folder. On the CP2K, you can find some data for other HPC clusters on the [performance page](https://www.cp2k.org/performance).
 
-## Preliminary LUMI-G benchmarks (Feb. 2023)
+## Preliminary LUMI-G Benchmarks (Feb. 2023)
 
 These were run in the beginning of 2023 with the CP2K 2023.1 release version compiled according to the instructions published in the [howto section](/howto/cp2k-lumi). On LUMI-C, no special core binding was used except what is provided by SLURM using e.g. `#SBATCH -c 8` for MPI + OpenMP jobs.
 
-### QS/H2O-x (Standard DFT molecular dynamics)
+**Summary**
+
+| Benchmark          | Nodes | LUMI-C | LUMI-G | Speed-up |
+| :----------------- | ------| -----: | -----: | -------: |
+| H2O-256            | 1     | 6.6 s  |  14.2s | 0.46x    |
+| H2O-512            | 4     | 11.0 s |  21.0s | 0.52x    |
+| H2O-1024           | 8     | 35.2 s |  58.5s | 0.60x    |
+| QS_DM_LS           | 4     | 723 s  | 436 s  | 1.65x    |
+| H2O-64-RI-dRPA-TZ  | 8     | 298 s  | 194 s  | 1.5x     |
+| H2O-128-RI-dRPA-TZ |32    | 1065 s  | 285 s  | 3.7x     |
+
+### DFT Molecular Dynamics (QS/H2O-x)
 
 These benchmark runs ab initio molecular dynamics (MD) with DFT, on a varying number of water molecules (from 32 to 8192) with TZV2P basis and plane-wave cutoff of 280 Ry. On LUMI-C, 
 
@@ -57,7 +68,7 @@ It turns out the that GPU acceleration on LUMI is not that effective for regular
 
 Only a subset of operations (32x32x32) are running on the GPU (100% in the `ACC` column). It then makes sense that the runtime is doubled with half the number of CPU core per node.
 
-### QS_DM_LS (linear scaling DFT)
+### Linear Scaling DFT (QS_DM_LS)
 
 What about linear scaling DFT? Does it work better on the GPU nodes. Using the previous benchmarks (see below) as a baseline, I get the following using 8 MPI ranks/8 GPUs per LUMI-G node and `OMP_NUM_THREADS=7` to account for only 63 available cores.
 
@@ -89,9 +100,29 @@ In this case, there is some speed-up, even if it is not dramatic. The ratio of G
 
 An interesting find is that activating huge memory pages (2 MB) significantly speeds up the GPU version of the code (but not so much the CPU-only version). For example, the original timing for the 4 LUMI-G node run was ca 540 s without huge pages, compared to 436 s when the binary is linked with the `craype-hugepages2M` module. It is about 25% faster. Increasing the huge page size further to 8 MB did not result in any more improvement.
 
-### QS_mp2_rpa (MP2 and RPA calculations)
+### RPA Calculations (QS_mp2_rpa)
 
-Next up! These should be faster on GPUs...
+The benchmarks in his folder run single-point energy calculations using MP2 and RPA with RI approximation. These are heavy calculations, typically 100x more expensive then regular DFT.
+
+For the medium 64-H2O benchmark with (192 atoms) I get these timings with RPA energy activated (`H2O-64-RI-dRPA-TZ.inp`):
+
+| Nodes | LUMI-C | LUMI-G | Speed-up |
+| ----: | -----: | -----: | -------: |
+| 8     | 298 s  | 194 s  | 1.5x    |
+| 16    | 186 s  | 115 s  | 1.6x    |
+
+The RPA module reports ca 1.3 TF/s of floating point performance per MPI rank, compared to around 0.1 TF/s rank with CPUs only (16 ranks per node with OMP 8), which shows some significant GPU usage, but far from the peak performance which is theoretically up to 24 TF/s per GCD. **There is again some speed-up with the GPU nodes, but not enough for it make sense to run these calculations on LUMI-G**.
+
+But there is also a larger RPA benchmark with 128 water molecules (`H2O-128-RI-dRPA-TZ.inp`). This benchmark was used as part of the performance benchmarks used in the procurement of LUMI. The committed value at delivery by HPE was 188 s using 128 LUMI-G nodes, which was met with some margin during testing. I only ran up to 32 GPU nodes in my own testing, but got similar, or better results even using rather conservative extrapolation up to 128 nodes (1.5x speed with 2x compute nodes):
+
+| Nodes | LUMI-C  | LUMI-G  | Speed-up |
+| ----: | ------: | -----:  | -------: |
+| 16    | (OOM)   | 525 s   |          |
+| 32    | 1065 s  | 285 s   | 3.7x     |
+| 64    |         | ~190 s  |          |
+| 128   |         | ~127 s  |          |
+
+Here, we can see some promising speed-up. The RPA module reports 2.4 TF/s per MPI rank on the GPU nodes vs the 0.2 TF/s rank on the CPU nodes. It still not close to the GPU peak performance but enough to accelerate the calculations significantly. **This larger RPA calculation makes sense to run on the GPU nodes.**
 
 ## LUMI-C benchmarks from Jan. 2022
 
