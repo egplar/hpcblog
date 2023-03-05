@@ -9,17 +9,15 @@
       
       
       
-        <link rel="prev" href="../../benchmarks/cp2k-lumi/">
+        <link rel="prev" href="../rocm/">
       
-      
-        <link rel="next" href="../rocm/">
       
       <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.9">
     
     
       
-        <title>MI250x - Peter Larsson's HPC Notes</title>
+        <title>PCIe - Peter Larsson's HPC Notes</title>
       
     
     
@@ -69,7 +67,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#technical-information-about-the-mi250x-gpu" class="md-skip">
+        <a href="#pci-express-bus" class="md-skip">
           Skip to content
         </a>
       
@@ -102,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              MI250x
+              PCIe
             
           </span>
         </div>
@@ -214,7 +212,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="./" class="md-tabs__link md-tabs__link--active">
+      <a href="../mi250x/" class="md-tabs__link md-tabs__link--active">
         Reference
       </a>
     </li>
@@ -401,59 +399,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          MI250x
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../mi250x/" class="md-nav__link">
         MI250x
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#raw-floating-point-capabilities" class="md-nav__link">
-    Raw floating point capabilities
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#gpu-connection-bandwidth" class="md-nav__link">
-    GPU Connection Bandwidth
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -477,11 +427,52 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../pcie/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          PCIe
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         PCIe
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#link-speeds" class="md-nav__link">
+    Link Speeds
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -520,15 +511,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#raw-floating-point-capabilities" class="md-nav__link">
-    Raw floating point capabilities
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#gpu-connection-bandwidth" class="md-nav__link">
-    GPU Connection Bandwidth
+  <a href="#link-speeds" class="md-nav__link">
+    Link Speeds
   </a>
   
 </li>
@@ -549,121 +533,59 @@
 
 
 
-<h1 id="technical-information-about-the-mi250x-gpu">Technical information about the MI250x GPU</h1>
-<h2 id="raw-floating-point-capabilities">Raw floating point capabilities</h2>
-<p>This table compares the raw technical specifications of one GPU die ("GCD") in the MI250x GPU package with some Nvidia GPUs. The GCD is what appears as 1 GPU when you run on the compute node, so this is what makes most sense to compare with when doing benchmarking. Please note that AMD, in its marketing, often refers to the MI250x package with 2 GCDs as "1 GPU", which might be misleading. </p>
+<h1 id="pci-express-bus">PCI Express bus</h1>
+<h2 id="link-speeds">Link Speeds</h2>
+<p>Per <a href="https://en.wikipedia.org/wiki/PCI_Express">wikipedia</a>:</p>
 <table>
 <thead>
 <tr>
-<th align="left">Spec</th>
-<th align="right">V100</th>
-<th align="right">A100</th>
-<th align="right">MI250x (1 GCD)</th>
+<th align="left">PCIe version</th>
+<th align="right">Transmission rate</th>
+<th align="left">Encoding</th>
+<th align="right">Bandwidth (1x)</th>
+<th align="right">Bandwidth (16x)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left">Vector FP64 (TF)</td>
-<td align="right">7.8</td>
-<td align="right">9.7</td>
-<td align="right">23.9</td>
+<td align="left">1.0</td>
+<td align="right">2.5 GT/s</td>
+<td align="left">8b/10b</td>
+<td align="right">0.25 GB/s</td>
+<td align="right">4.0 GB/s</td>
 </tr>
 <tr>
-<td align="left">Vector FP32 (TF)</td>
-<td align="right">15.7</td>
-<td align="right">19.5</td>
-<td align="right">23.9</td>
+<td align="left">2.0</td>
+<td align="right">5.0 GT/s</td>
+<td align="left">8b/10b</td>
+<td align="right">0.50 GB/s</td>
+<td align="right">8.0 GB/s</td>
 </tr>
 <tr>
-<td align="left">Vector FP16 (TF)</td>
-<td align="right">31.4</td>
-<td align="right">78.0</td>
-<td align="right">191.5</td>
+<td align="left">3.0</td>
+<td align="right">8.0 GT/s</td>
+<td align="left">128b/130b</td>
+<td align="right">0.99 GB/s</td>
+<td align="right">15.7 GB/s</td>
 </tr>
 <tr>
-<td align="left">Matrix FP64 (TF)</td>
-<td align="right">7.8</td>
-<td align="right">19.5</td>
-<td align="right">47.9</td>
+<td align="left">4.0</td>
+<td align="right">16.0 GT/s</td>
+<td align="left">128b/130b</td>
+<td align="right">1.97 GB/s</td>
+<td align="right">31.5 GB/s</td>
 </tr>
 <tr>
-<td align="left">Matrix FP32 (TF)</td>
-<td align="right">15.7</td>
-<td align="right">156.0</td>
-<td align="right">47.9</td>
-</tr>
-<tr>
-<td align="left">Matrix FP16 (TF)</td>
-<td align="right">125.0</td>
-<td align="right">312.0</td>
-<td align="right">191.5</td>
-</tr>
-<tr>
-<td align="left">Matrix BF16 (TF)</td>
-<td align="right">125.0</td>
-<td align="right">312.0</td>
-<td align="right">191.5</td>
-</tr>
-<tr>
-<td align="left">Memory bandwidth (TB/s)</td>
-<td align="right">1.1</td>
-<td align="right">2.0</td>
-<td align="right">1.6</td>
+<td align="left">5.0</td>
+<td align="right">32.0 GT/s</td>
+<td align="left">128b/130b</td>
+<td align="right">3.94 GB/s</td>
+<td align="right">63.0 GB/s</td>
 </tr>
 </tbody>
 </table>
-<p>These numbers give a rough estimation of what kind of performance you can expect (or should aim for) when porting Nvidia CUDA applications to AMD GPUs:</p>
-<ul>
-<li>If the code is limited by memory bandwidth you are likely to see the same or somewhat lower performance per GPU, if you compare 1 GCD to 1 A100.</li>
-<li>If the code uses FP64 math, like many traditional scientific simulations, there is a potential for 2x speedup vs 1 A100, but you may struggle to realize this performance due to the available memory bandwidth.</li>
-<li>If the code uses FP32 math, the performance should be about even, +/- 25% or so.</li>
-<li>If the code uses low-precision matrix operations (e.g. machine learning), the performance is likely to be lower per GPU.</li>
-</ul>
-<p>All in all, I consider 1 MI250x GCD to be roughly equal to 1 A100, as an easy rule of thumb. If you can get results like that, you are probably in a good spot already with respect to optimization.</p>
-<p>Sources:</p>
-<ul>
-<li><a href="https://www.amd.com/system/files/documents/amd-instinct-mi200-datasheet.pdf">AMD's MI250x data sheet</a></li>
-<li><a href="https://developer.nvidia.com/blog/nvidia-hopper-architecture-in-depth/">Nvidia's blog post on the Hopper architecture</a></li>
-<li><a href="https://developer.nvidia.com/blog/nvidia-ampere-architecture-in-depth/">Nvidia's blog post on the Ampere architecture</a></li>
-</ul>
-<h2 id="gpu-connection-bandwidth">GPU Connection Bandwidth</h2>
-<table>
-<thead>
-<tr>
-<th align="left">Connection</th>
-<th align="right">Speed</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left">CPU-GCD (host to device)</td>
-<td align="right">36 GB/s</td>
-</tr>
-<tr>
-<td align="left">GCD-GCD (within package)</td>
-<td align="right">200 GB/s</td>
-</tr>
-<tr>
-<td align="left">GCD-GCD (across packages)</td>
-<td align="right">50 (or 100) GB/s</td>
-</tr>
-<tr>
-<td align="left">GCD-NIC (to network)</td>
-<td align="right">50 GB/s</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>Each GCD is connected to the CPU with a 16 bit Infinity fabric link at 18 GT/s. This gives 36 GB/s, which is slightly more than PCIe 4.0 16x (31.5 GB/s), but do not expect miracles here compared to a typical desktop/server setup with GPUs on a PCIe bus. The CPU memory bandwidth is around 200 GB/s on a single socket AMD Zen3 "Trento" (using 8 channel DDR4-3200). This means that all 8 GCD reading from memory at the same time (8x36 GB/s = 288 GB/s) will more than saturate the main memory bandwidth. They will only be able to get at most 25 GB/s each from the main memory (ca 70% of maximum CPU-to-Host bandwidth).</li>
-<li>Between the GCDs, there are 50 GB/s Infinity fabric links. There are 5 links in total going from/to each package with 2 GCDs and 4 links internally within each package between the 2 GCDs. In theory, this could be used to faciliate very fast communication between GCD in the same package if necessary. </li>
-<li>The reason for 5 links from each packages and the two different bandwidth between GCD (50 and 100 GB/s) is that the extra links enables one to form two bi-directional rings with all GPUs where the maximum distance from GCD to GCD is 2 hops. This can be used top optimize communication patterns.</li>
-<li>Each GPU package is connected to a NIC with PCIe 4.0 ESM link at 50 GB/s (400 Gbit/s). It is not clear to me why such a fast link is needed, when the Slingshot 11 NICs are 200 Gbit/s?</li>
-<li>Tests made in the paper linked below indicates that you can only reach the maximum connection bandwidth by doing implicit transfers initiated by a GPU kernel, <code>hipMemcpyAsync</code> alone will not realize the fully bandwidth.</li>
-</ul>
-<p>Sources:</p>
-<ul>
-<li><a href="https://arxiv.org/pdf/2302.14827.pdf">Interconnect Bandwidth Heterogenity on AMD MI250x and Infinity Fabric</a></li>
-</ul>
+<p>These are the official specifications of the standard. "GB" is Gigabytes in base-10. As a rule of thumb, PCIe 4.0 can do 2 GB/s per lane, so 32 GB/s on a 16x slot. Some PCIe implementations may drive the links at a higher rate, for example the Extended Speed Mode (ESM) using 20.0 GT/s and 25.0 GT/s in CCIX on top of PCIe 4.0.</p>
+<p>The transfer rates are relevant for e.g. GPUs connected to the CPU through PCIe (the common case for workstation/desktop graphics cards) and NICs.</p>
 
 
 

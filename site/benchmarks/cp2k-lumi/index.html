@@ -389,29 +389,29 @@
       
         <li class="md-nav__item">
   <a href="#preliminary-lumi-g-benchmarks-feb-2023" class="md-nav__link">
-    Preliminary LUMI-G benchmarks (Feb. 2023)
+    Preliminary LUMI-G Benchmarks (Feb. 2023)
   </a>
   
-    <nav class="md-nav" aria-label="Preliminary LUMI-G benchmarks (Feb. 2023)">
+    <nav class="md-nav" aria-label="Preliminary LUMI-G Benchmarks (Feb. 2023)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#qsh2o-x-standard-dft-molecular-dynamics" class="md-nav__link">
-    QS/H2O-x (Standard DFT molecular dynamics)
+  <a href="#dft-molecular-dynamics-qsh2o-x" class="md-nav__link">
+    DFT Molecular Dynamics (QS/H2O-x)
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#qs_dm_ls-linear-scaling-dft" class="md-nav__link">
-    QS_DM_LS (linear scaling DFT)
+  <a href="#linear-scaling-dft-qs_dm_ls" class="md-nav__link">
+    Linear Scaling DFT (QS_DM_LS)
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#qs_mp2_rpa-mp2-and-rpa-calculations" class="md-nav__link">
-    QS_mp2_rpa (MP2 and RPA calculations)
+  <a href="#rpa-calculations-qs_mp2_rpa" class="md-nav__link">
+    RPA Calculations (QS_mp2_rpa)
   </a>
   
 </li>
@@ -430,7 +430,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#qs_dm_ls-linear-scaling-dft_1" class="md-nav__link">
+  <a href="#qs_dm_ls-linear-scaling-dft" class="md-nav__link">
     QS_DM_LS Linear scaling DFT
   </a>
   
@@ -513,6 +513,20 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/pcie/" class="md-nav__link">
+        PCIe
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -547,29 +561,29 @@
       
         <li class="md-nav__item">
   <a href="#preliminary-lumi-g-benchmarks-feb-2023" class="md-nav__link">
-    Preliminary LUMI-G benchmarks (Feb. 2023)
+    Preliminary LUMI-G Benchmarks (Feb. 2023)
   </a>
   
-    <nav class="md-nav" aria-label="Preliminary LUMI-G benchmarks (Feb. 2023)">
+    <nav class="md-nav" aria-label="Preliminary LUMI-G Benchmarks (Feb. 2023)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#qsh2o-x-standard-dft-molecular-dynamics" class="md-nav__link">
-    QS/H2O-x (Standard DFT molecular dynamics)
+  <a href="#dft-molecular-dynamics-qsh2o-x" class="md-nav__link">
+    DFT Molecular Dynamics (QS/H2O-x)
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#qs_dm_ls-linear-scaling-dft" class="md-nav__link">
-    QS_DM_LS (linear scaling DFT)
+  <a href="#linear-scaling-dft-qs_dm_ls" class="md-nav__link">
+    Linear Scaling DFT (QS_DM_LS)
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#qs_mp2_rpa-mp2-and-rpa-calculations" class="md-nav__link">
-    QS_mp2_rpa (MP2 and RPA calculations)
+  <a href="#rpa-calculations-qs_mp2_rpa" class="md-nav__link">
+    RPA Calculations (QS_mp2_rpa)
   </a>
   
 </li>
@@ -588,7 +602,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#qs_dm_ls-linear-scaling-dft_1" class="md-nav__link">
+  <a href="#qs_dm_ls-linear-scaling-dft" class="md-nav__link">
     QS_DM_LS Linear scaling DFT
   </a>
   
@@ -617,9 +631,65 @@
 
 <h1 id="cp2k-standard-benchmarks-on-lumi">CP2K Standard Benchmarks on LUMI</h1>
 <p>The <a href="https://www.cp2k.org/">CP2K</a> program contains a set of standard benchmarks, which are distributed with code. You can find them in the <code>benchmarks/</code> directory in the source code folder. On the CP2K, you can find some data for other HPC clusters on the <a href="https://www.cp2k.org/performance">performance page</a>.</p>
-<h2 id="preliminary-lumi-g-benchmarks-feb-2023">Preliminary LUMI-G benchmarks (Feb. 2023)</h2>
+<h2 id="preliminary-lumi-g-benchmarks-feb-2023">Preliminary LUMI-G Benchmarks (Feb. 2023)</h2>
 <p>These were run in the beginning of 2023 with the CP2K 2023.1 release version compiled according to the instructions published in the <a href="/howto/cp2k-lumi">howto section</a>. On LUMI-C, no special core binding was used except what is provided by SLURM using e.g. <code>#SBATCH -c 8</code> for MPI + OpenMP jobs.</p>
-<h3 id="qsh2o-x-standard-dft-molecular-dynamics">QS/H2O-x (Standard DFT molecular dynamics)</h3>
+<p><strong>Summary</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">Benchmark</th>
+<th>Nodes</th>
+<th align="right">LUMI-C</th>
+<th align="right">LUMI-G</th>
+<th align="right">Speed-up</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">H2O-256</td>
+<td>1</td>
+<td align="right">6.6 s</td>
+<td align="right">14.2s</td>
+<td align="right">0.46x</td>
+</tr>
+<tr>
+<td align="left">H2O-512</td>
+<td>4</td>
+<td align="right">11.0 s</td>
+<td align="right">21.0s</td>
+<td align="right">0.52x</td>
+</tr>
+<tr>
+<td align="left">H2O-1024</td>
+<td>8</td>
+<td align="right">35.2 s</td>
+<td align="right">58.5s</td>
+<td align="right">0.60x</td>
+</tr>
+<tr>
+<td align="left">QS_DM_LS</td>
+<td>4</td>
+<td align="right">723 s</td>
+<td align="right">436 s</td>
+<td align="right">1.65x</td>
+</tr>
+<tr>
+<td align="left">H2O-64-RI-dRPA-TZ</td>
+<td>8</td>
+<td align="right">298 s</td>
+<td align="right">194 s</td>
+<td align="right">1.5x</td>
+</tr>
+<tr>
+<td align="left">H2O-128-RI-dRPA-TZ</td>
+<td>32</td>
+<td align="right">1065 s</td>
+<td align="right">285 s</td>
+<td align="right">3.7x</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dft-molecular-dynamics-qsh2o-x">DFT Molecular Dynamics (QS/H2O-x)</h3>
 <p>These benchmark runs ab initio molecular dynamics (MD) with DFT, on a varying number of water molecules (from 32 to 8192) with TZV2P basis and plane-wave cutoff of 280 Ry. On LUMI-C, </p>
 <p><img alt="H2O DFT MD scaling plot" src="/benchmarks/cp2k-qsdft-lumi-feb2023.png" /></p>
 <p>The data points are the wall-time taken per MD steps (i.e. one fully converged SCF cycle, typically only a few SCF steps in MD simulations). On LUMI-C, it is possible to run huge cell with a relatively small number of compute nodes. The parallel scaling is decent, but could be better, when comparing to e.g. <a href="https://www.cp2k.org/_media/events:2018_summer_school:cp2k_parallel.pdf]">these benchmarks</a> from Cray XC30 Archer in 2013. It is possible that it related to the network issues seen on LUMI at the start, which still persist.</p>
@@ -690,7 +760,7 @@ marketing flops                   375.300685E+12
 -------------------------------------------------------------------------------
 </code></pre>
 <p>Only a subset of operations (32x32x32) are running on the GPU (100% in the <code>ACC</code> column). It then makes sense that the runtime is doubled with half the number of CPU core per node.</p>
-<h3 id="qs_dm_ls-linear-scaling-dft">QS_DM_LS (linear scaling DFT)</h3>
+<h3 id="linear-scaling-dft-qs_dm_ls">Linear Scaling DFT (QS_DM_LS)</h3>
 <p>What about linear scaling DFT? Does it work better on the GPU nodes. Using the previous benchmarks (see below) as a baseline, I get the following using 8 MPI ranks/8 GPUs per LUMI-G node and <code>OMP_NUM_THREADS=7</code> to account for only 63 available cores.</p>
 <table>
 <thead>
@@ -736,11 +806,75 @@ marketing flops                   891.964171E+15
 </code></pre>
 <p><strong>It is doubtful, though, if it makes economic sense to run these kind of calculations on LUMI-G</strong>, as you would typically need to see a speed-up of at least 3x to 4x for it to make sense.</p>
 <p>An interesting find is that activating huge memory pages (2 MB) significantly speeds up the GPU version of the code (but not so much the CPU-only version). For example, the original timing for the 4 LUMI-G node run was ca 540 s without huge pages, compared to 436 s when the binary is linked with the <code>craype-hugepages2M</code> module. It is about 25% faster. Increasing the huge page size further to 8 MB did not result in any more improvement.</p>
-<h3 id="qs_mp2_rpa-mp2-and-rpa-calculations">QS_mp2_rpa (MP2 and RPA calculations)</h3>
-<p>Next up! These should be faster on GPUs...</p>
+<h3 id="rpa-calculations-qs_mp2_rpa">RPA Calculations (QS_mp2_rpa)</h3>
+<p>The benchmarks in his folder run single-point energy calculations using MP2 and RPA with RI approximation. These are heavy calculations, typically 100x more expensive then regular DFT.</p>
+<p>For the medium 64-H2O benchmark with (192 atoms) I get these timings with RPA energy activated (<code>H2O-64-RI-dRPA-TZ.inp</code>):</p>
+<table>
+<thead>
+<tr>
+<th align="right">Nodes</th>
+<th align="right">LUMI-C</th>
+<th align="right">LUMI-G</th>
+<th align="right">Speed-up</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="right">8</td>
+<td align="right">298 s</td>
+<td align="right">194 s</td>
+<td align="right">1.5x</td>
+</tr>
+<tr>
+<td align="right">16</td>
+<td align="right">186 s</td>
+<td align="right">115 s</td>
+<td align="right">1.6x</td>
+</tr>
+</tbody>
+</table>
+<p>The RPA module reports ca 1.3 TF/s of floating point performance per MPI rank, compared to around 0.1 TF/s rank with CPUs only (16 ranks per node with OMP 8), which shows some significant GPU usage, but far from the peak performance which is theoretically up to 24 TF/s per GCD. <strong>There is again some speed-up with the GPU nodes, but not enough for it make sense to run these calculations on LUMI-G</strong>.</p>
+<p>But there is also a larger RPA benchmark with 128 water molecules (<code>H2O-128-RI-dRPA-TZ.inp</code>). This benchmark was used as part of the performance benchmarks used in the procurement of LUMI. The committed value at delivery by HPE was 188 s using 128 LUMI-G nodes, which was met with some margin during testing. I only ran up to 32 GPU nodes in my own testing, but got similar, or better results even using rather conservative extrapolation up to 128 nodes (1.5x speed with 2x compute nodes):</p>
+<table>
+<thead>
+<tr>
+<th align="right">Nodes</th>
+<th align="right">LUMI-C</th>
+<th align="right">LUMI-G</th>
+<th align="right">Speed-up</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="right">16</td>
+<td align="right">(OOM)</td>
+<td align="right">525 s</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td align="right">32</td>
+<td align="right">1065 s</td>
+<td align="right">285 s</td>
+<td align="right">3.7x</td>
+</tr>
+<tr>
+<td align="right">64</td>
+<td align="right"></td>
+<td align="right">~190 s</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td align="right">128</td>
+<td align="right"></td>
+<td align="right">~127 s</td>
+<td align="right"></td>
+</tr>
+</tbody>
+</table>
+<p>Here, we can see some promising speed-up. The RPA module reports 2.4 TF/s per MPI rank on the GPU nodes vs the 0.2 TF/s rank on the CPU nodes. It still not close to the GPU peak performance but enough to accelerate the calculations significantly. <strong>This larger RPA calculation makes sense to run on the GPU nodes.</strong></p>
 <h2 id="lumi-c-benchmarks-from-jan-2022">LUMI-C benchmarks from Jan. 2022</h2>
 <p>These were run on LUMI-C during 2022 with CP2K 9.1 built from the LUMI EasyBuild recipes.</p>
-<h3 id="qs_dm_ls-linear-scaling-dft_1">QS_DM_LS Linear scaling DFT</h3>
+<h3 id="qs_dm_ls-linear-scaling-dft">QS_DM_LS Linear scaling DFT</h3>
 <p>This benchmark using the linear scaling DFT method in CP2K and simulates 6912 water molecules (21k atoms) with DZVP basis and 300 Ry cut-off. It runs for 2 SCF iterations (which is not enough to achieve convergence).</p>
 <p>I was able to ran some benchmarks with many nodes on LUMI-C during Jan 2022 with CP2K 9.1 and no extensive tuning other testing different values of <code>OMP_NUM_THREADS</code>, but the results were not impressive compared to what was published before for e.g. the Piz Daint and Noctua clusters <a href="https://www.cp2k.org/performance">on the CP2K web page</a>:</p>
 <p><img alt="H2O LS-DFT scaling plot" src="/benchmarks/cp2k-lsdft-lumi-jan2022.png" /></p>
